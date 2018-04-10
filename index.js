@@ -23,6 +23,25 @@ function createStore (reducer) {
     }
   }
 
+  /**
+   * Invokes action to current state (calling reducer) and updates state
+   * then runs all listeners.
+   *
+   * @param  {[Object]} action [action to take place]
+   * @return {[None]}
+   */
+  const dispatch = (action) => {
+    state = reducer(state, action)
+    listeners.forEach((listener) => listener())
+  }
+
+  return {
+    getState,
+    subscribe,
+    dispatch,
+  }
+}
+
 // App code
 const ADD_TODO = 'ADD_TODO'
 const REMOVE_TODO = 'REMOVE_TODO'
@@ -63,25 +82,6 @@ function removeGoalAction (id) {
   return {
     type: REMOVE_GOAL,
     id,
-  }
-}
-
-  /**
-   * Invokes action to current state (calling reducer) and updates state
-   * then runs all listeners.
-   *
-   * @param  {[Object]} action [action to take place]
-   * @return {[None]}
-   */
-  const dispatch = (action) => {
-    state = reducer(state, action)
-    listeners.forEach((listener) => listener())
-  }
-
-  return {
-    getState,
-    subscribe,
-    dispatch,
   }
 }
 
