@@ -129,6 +129,17 @@
       }
     }
 
+    function handleInitialData () {
+      return (dispatch) => {
+        Promise.all([
+          API.fetchTodos(),
+          API.fetchGoals(),
+        ]).then(([ todos, goals ]) => {
+          dispatch(receiveDataAction(todos, goals))
+        })
+      }
+    }
+
     /**
      * checker middleware (runs between dispatch call and
      * the moment it reaches reducer)
@@ -309,12 +320,7 @@
       componentDidMount () {
         const { store } = this.props
 
-        Promise.all([
-          API.fetchTodos(),
-          API.fetchGoals(),
-        ]).then(([ todos, goals ]) => {
-          store.dispatch(receiveDataAction(todos, goals))
-        })
+        store.dispatch(handleInitialData())
         store.subscribe(() => this.forceUpdate())
       }
       render() {
