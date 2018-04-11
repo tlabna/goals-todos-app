@@ -73,6 +73,17 @@
       }
     }
 
+    function handleDeleteTodo (todo) {
+      return (dispatch) => {
+        dispatch(removeTodoAction(todo.id))
+        return API.deleteTodo(todo.id)
+          .catch(() => {
+            dispatch(addTodoAction(todo))
+            alert('An error occured. Try again.')
+          })
+      }
+    }
+
     /**
      * checker middleware (runs between dispatch call and
      * the moment it reaches reducer)
@@ -104,6 +115,14 @@
       console.groupEnd()
 
       return result
+    }
+
+    const thunk = (store) => (next) => (action) => {
+      if (typeof action === 'function') {
+        return action(store.dispatch)
+      }
+
+      return next(action)
     }
 
     /*
@@ -157,7 +176,7 @@
       todos,
       goals,
       loading,
-    }), Redux.applyMiddleware(checker, logger))
+    }), Redux.applyMiddleware(thunk, checker, logger))
   </script>
   <script type="text/babel">
     function List (props) {
@@ -189,12 +208,7 @@
           .catch(() => alert('An error occured. Try again.'))
       }
       removeItem = (todo) => {
-        this.props.store.dispatch(removeTodoAction(todo.id))
-        return API.deleteTodo(todo.id)
-          .catch(() => {
-            this.props.store.dispatch(addTodoAction(todo))
-            alert('An error occured. Try again.')
-          })
+        this.props.store.dispatch(handleDeleteTodo(todo))
       }
       toggleItem = (todo) => {
         this.props.store.dispatch(toggleTodoAction(todo.id))
