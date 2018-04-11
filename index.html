@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Todos/Goals</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js'></script>
 </head>
 
 <body>
@@ -22,52 +23,6 @@
   <script type="text/javascript">
     function generateId () {
       return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
-    }
-
-    /**************************************
-    * LIBRARY CODE
-    ***************************************/
-    function createStore(reducer) {
-      // The store should have four parts
-      // 1. The state
-      // 2. Get the state. (getState)
-      // 3. Listen to changes on the state. (subscribe)
-      // 4. Update the state (dispatch)
-
-      let state
-      let listeners = []
-
-      const getState = () => state
-
-      const subscribe = (listener) => {
-        listeners.push(listener)
-        /**
-         * Returns lists of listeners excluding, currently created listener
-         * (i.e. remove listener from list)
-         * @return {[type]} [description]
-         */
-        return () => {
-          listeners = listeners.filter((l) => l !== listener)
-        }
-      }
-
-      /**
-       * Invokes action to current state (calling reducer) and updates state
-       * then runs all listeners.
-       *
-       * @param  {[Object]} action [action to take place]
-       * @return {[None]}
-       */
-      const dispatch = (action) => {
-        state = reducer(state, action)
-        listeners.forEach((listener) => listener())
-      }
-
-      return {
-        getState,
-        subscribe,
-        dispatch,
-      }
     }
 
     /**********************************
@@ -149,25 +104,10 @@
       }
     }
 
-    /**
-     * app reducer that combines all our reducers
-     * and returns entire app state
-     *
-     * @param  {Object} state  [state of app]
-     * @param  {[Object]} action [action being dispatched]
-     * @return {[Object]}        [entire state of app]
-     */
-    function app(state = {}, action) {
-      return {
-        todos: todos(state.todos, action),
-        goals: goals(state.goals, action),
-      }
-    }
-
-    /**
-     * Below statements used to test store on console
-     */
-    const store = createStore(app)
+    const store = Redux.createStore(Redux.combineReducers({
+      todos,
+      goals,
+    }))
 
     store.subscribe(() => {
       const { goals, todos } = store.getState()
