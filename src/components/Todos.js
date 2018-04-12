@@ -18,8 +18,8 @@ class Todos extends React.Component {
   removeItem = (todo) => {
     this.props.dispatch(handleDeleteTodo(todo))
   }
-  toggleItem = (todo) => {
-    this.props.dispatch(handleToggleTodo(todo.id))
+  toggleItem = (id) => {
+    this.props.dispatch(handleToggleTodo(id))
   }
   render() {
     return (

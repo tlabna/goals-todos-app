@@ -4,8 +4,8 @@ import todos from './todos'
 import loading from './loading'
 import goals from './goals'
 
-export default combineReducers([
+export default combineReducers({
   todos,
   goals,
   loading,
-])
+})

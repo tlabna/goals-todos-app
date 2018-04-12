@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import ConnectedTodos from './Todos'
 import ConnectedGoals from './Goals'
@@ -7,11 +7,11 @@ import {
 } from '../actions/shared'
 
 
-class App extends Component {
+class App extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props
 
-    store.dispatch(handleInitialData())
+    dispatch(handleInitialData())
   }
   render() {
     const { loading } = this.props
